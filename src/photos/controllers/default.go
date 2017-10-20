@@ -39,6 +39,26 @@ func (c *MainController) GetImage() {
 	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, string(rawPath))
 }
 
+// GetSmallImage return image
+func (c *MainController) GetSmallImage() {
+	path := c.Ctx.Input.Param(":path")
+	rawPath, err := base64.StdEncoding.DecodeString(path)
+	if err != nil {
+		return
+	}
+	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, string(rawPath))
+}
+
+// GetBigImage return image
+func (c *MainController) GetBigImage() {
+	path := c.Ctx.Input.Param(":path")
+	rawPath, err := base64.StdEncoding.DecodeString(path)
+	if err != nil {
+		return
+	}
+	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, string(rawPath))
+}
+
 // GetPage return a specified page
 func (c *MainController) GetPage() {
 	path := c.Ctx.Input.Param(":path")
