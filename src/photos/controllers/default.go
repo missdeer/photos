@@ -42,7 +42,6 @@ type MainController struct {
 
 func traverse(rootPath string) (photos []Photo, links []Link) {
 	walkFunc := func(itemPath string, info os.FileInfo, err error) error {
-		fmt.Println("item path", itemPath, info.Name())
 		if err != nil {
 			return err
 		}
@@ -221,10 +220,8 @@ func (c *MainController) GetPage() {
 		return
 	}
 	currentPath := string(rawPath)
-	fmt.Println("current path:", currentPath)
 	docroot := beego.AppConfig.String("docroot")
 	rootPath := fmt.Sprintf("%s%c%s", docroot, os.PathSeparator, currentPath)
-	fmt.Println("root directory", rootPath)
 
 	var photos []Photo
 	var links []Link
@@ -267,10 +264,17 @@ func (c *MainController) GetPage() {
 	if idx >= 0 {
 		encodedPath := base64.StdEncoding.EncodeToString([]byte(currentPath[:idx]))
 		encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
-		links = append(links, Link{
-			Url:   "/p/" + encodedPath,
-			Title: "返回上一级目录",
-		})
+		if encodedPath == "" {
+			links = append(links, Link{
+				Url:   "/",
+				Title: "返回上一级目录",
+			})
+		} else {
+			links = append(links, Link{
+				Url:   "/p/" + encodedPath,
+				Title: "返回上一级目录",
+			})
+		}
 	} else {
 		links = append(links, Link{
 			Url:   "/",
