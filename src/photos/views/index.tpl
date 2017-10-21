@@ -20,7 +20,7 @@
 <!-- The container for the list of example images -->
 <div id="links" class="links">
     {{range .Photos}}
-    <a href="{{.Origin}}" title="{{.Title}}" data-gallery=""><img src="{{.Small}}"/></a>
+    <a href="{{.Big}}" title="{{.Title}}" data-gallery=""><img src="{{.Small}}"/></a>
     {{end}}
 </div>
 <!-- The Gallery as lightbox dialog, should be a child element of the document body -->
@@ -33,6 +33,12 @@
     <a class="play-pause"></a>
     <ol class="indicator"></ol>
 </div>
+<ul class="navigation">
+    {{range .Links}}
+	<li><a href="{{.Url}}">{{.Title}}</a></li>
+    {{end}}
+	<li><a href="../index.html">返回上一级目录</a></li>
+</ul>
 <script src="/js/blueimp-helper.js"></script>
 <script src="/js/blueimp-gallery.js"></script>
 <script src="/js/blueimp-gallery-fullscreen.js"></script>

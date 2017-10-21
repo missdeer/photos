@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/base64"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -12,8 +13,15 @@ import (
 // Photo struct represents a pohto
 type Photo struct {
 	Origin string
+	Big    string
 	Small  string
 	Title  string
+}
+
+// Link struct represents a link
+type Link struct {
+	Url   string
+	Title string
 }
 
 // MainController main controller
@@ -62,11 +70,18 @@ func (c *MainController) GetBigImage() {
 // GetPage return a specified page
 func (c *MainController) GetPage() {
 	path := c.Ctx.Input.Param(":path")
+	fmt.Println(path)
+	fmt.Println("root directory", beego.AppConfig.String("docroot"))
+	if path == "" {
+		return
+	}
 	rawPath, err := base64.StdEncoding.DecodeString(path)
 	if err != nil {
+		fmt.Println("can't decode path", err)
 		return
 	}
 	var photos []Photo
+	var links []Link
 	var dirs []string
 	walkFunc := func(itemPath string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -87,5 +102,6 @@ func (c *MainController) GetPage() {
 	c.Data["Dirs"] = dirs
 	c.Data["Photos"] = photos
 	c.Data["Title"] = path
+	c.Data["Links"] = links
 	c.TplName = "index.tpl"
 }
