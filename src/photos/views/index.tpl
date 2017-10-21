@@ -37,7 +37,6 @@
     {{range .Links}}
 	<li><a href="{{.Url}}">{{.Title}}</a></li>
     {{end}}
-	<li><a href="../index.html">返回上一级目录</a></li>
 </ul>
 <script src="/js/blueimp-helper.js"></script>
 <script src="/js/blueimp-gallery.js"></script>
