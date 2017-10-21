@@ -21,6 +21,25 @@ import (
 	"github.com/nfnt/resize"
 )
 
+type Semaphore struct {
+	c chan int
+}
+
+func NewSemaphore(n int) *Semaphore {
+	s := &Semaphore{
+		c: make(chan int, n),
+	}
+	return s
+}
+
+func (s *Semaphore) Acquire() {
+	s.c <- 0
+}
+
+func (s *Semaphore) Release() {
+	<-s.c
+}
+
 // Photo struct represents a pohto
 type Photo struct {
 	Origin string
@@ -39,6 +58,10 @@ type Link struct {
 type MainController struct {
 	beego.Controller
 }
+
+var (
+	sema = NewSemaphore(5)
+)
 
 func traverse(rootPath string) (photos []Photo, links []Link) {
 	walkFunc := func(itemPath string, info os.FileInfo, err error) error {
@@ -140,6 +163,8 @@ func saveImage(img *image.Image, savePath string) (err error) {
 }
 
 func scaleImage(filepath string, fileSavePath string, width int, height int) error {
+	sema.Acquire()
+	defer sema.Release()
 	reader, err := os.Open(filepath)
 	if err != nil {
 		log.Println(filepath, err)
