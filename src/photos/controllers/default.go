@@ -48,8 +48,10 @@ func traverse(rootPath string) (photos []Photo, links []Link) {
 		}
 		if info.IsDir() {
 			if info.Name() != "__s__" && info.Name() != "__b__" && itemPath != rootPath {
+				encodedPath := base64.StdEncoding.EncodeToString([]byte(info.Name()))
+				encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
 				links = append(links, Link{
-					Url:   "/p/" + base64.StdEncoding.EncodeToString([]byte(info.Name())),
+					Url:   "/p/" + encodedPath,
 					Title: info.Name(),
 				})
 			}
@@ -60,10 +62,12 @@ func traverse(rootPath string) (photos []Photo, links []Link) {
 		}
 		ext := strings.ToLower(filepath.Ext(itemPath))
 		if ext == ".png" || ext == ".jpg" || ext == ".jpeg" {
+			encodedPath := base64.StdEncoding.EncodeToString([]byte(info.Name()))
+			encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
 			photos = append(photos, Photo{
-				Origin: "/i/" + base64.StdEncoding.EncodeToString([]byte(info.Name())),
-				Small:  "/s/" + base64.StdEncoding.EncodeToString([]byte(info.Name())),
-				Big:    "/b/" + base64.StdEncoding.EncodeToString([]byte(info.Name())),
+				Origin: "/i/" + encodedPath,
+				Small:  "/s/" + encodedPath,
+				Big:    "/b/" + encodedPath,
 				Title:  info.Name(),
 			})
 		}
@@ -87,6 +91,7 @@ func (c *MainController) Get() {
 // GetImage return image
 func (c *MainController) GetImage() {
 	path := c.Ctx.Input.Param(":path")
+	path = strings.Replace(path, ":slash:", "/", -1)
 	rawPath, err := base64.StdEncoding.DecodeString(path)
 	if err != nil {
 		return
@@ -173,6 +178,7 @@ func scaleImage(filepath string, fileSavePath string, width int, height int) err
 // GetSmallImage return image
 func (c *MainController) GetSmallImage() {
 	path := c.Ctx.Input.Param(":path")
+	path = strings.Replace(path, ":slash:", "/", -1)
 	rawPath, err := base64.StdEncoding.DecodeString(path)
 	if err != nil {
 		return
@@ -181,7 +187,6 @@ func (c *MainController) GetSmallImage() {
 	imgPath := fmt.Sprintf("%s%c%s", docroot, os.PathSeparator, string(rawPath))
 	idx := strings.LastIndexByte(imgPath, os.PathSeparator)
 	smallImgPath := fmt.Sprintf("%s%c__s__%c%s", imgPath[:idx], os.PathSeparator, os.PathSeparator, imgPath[idx+1:])
-	fmt.Println("path", path, "small image:", smallImgPath)
 	if b, e := isFileExists(smallImgPath); !b || e != nil {
 		scaleImage(imgPath, smallImgPath, 75, 75)
 	}
@@ -191,6 +196,7 @@ func (c *MainController) GetSmallImage() {
 // GetBigImage return image
 func (c *MainController) GetBigImage() {
 	path := c.Ctx.Input.Param(":path")
+	path = strings.Replace(path, ":slash:", "/", -1)
 	rawPath, err := base64.StdEncoding.DecodeString(path)
 	if err != nil {
 		return
@@ -199,7 +205,6 @@ func (c *MainController) GetBigImage() {
 	imgPath := fmt.Sprintf("%s%c%s", docroot, os.PathSeparator, string(rawPath))
 	idx := strings.LastIndexByte(imgPath, os.PathSeparator)
 	bigImgPath := fmt.Sprintf("%s%c__b__%c%s", imgPath[:idx], os.PathSeparator, os.PathSeparator, imgPath[idx+1:])
-	fmt.Println("path", path, "big image:", bigImgPath)
 	if b, e := isFileExists(bigImgPath); !b || e != nil {
 		scaleImage(imgPath, bigImgPath, 1024, 1024)
 	}
@@ -209,6 +214,7 @@ func (c *MainController) GetBigImage() {
 // GetPage return a specified page
 func (c *MainController) GetPage() {
 	path := c.Ctx.Input.Param(":path")
+	path = strings.Replace(path, ":slash:", "/", -1)
 	rawPath, err := base64.StdEncoding.DecodeString(path)
 	if err != nil {
 		fmt.Println("can't decode path", err)
@@ -228,8 +234,10 @@ func (c *MainController) GetPage() {
 		}
 		if info.IsDir() {
 			if info.Name() != "__s__" && info.Name() != "__b__" && itemPath != rootPath {
+				encodedPath := base64.StdEncoding.EncodeToString([]byte(itemPath[len(docroot):]))
+				encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
 				links = append(links, Link{
-					Url:   "/p/" + base64.StdEncoding.EncodeToString([]byte(itemPath[len(docroot):])),
+					Url:   "/p/" + encodedPath,
 					Title: info.Name(),
 				})
 			}
@@ -241,10 +249,12 @@ func (c *MainController) GetPage() {
 
 		ext := strings.ToLower(filepath.Ext(itemPath))
 		if ext == ".png" || ext == ".jpg" || ext == ".jpeg" {
+			encodedPath := base64.StdEncoding.EncodeToString([]byte(itemPath[len(docroot):]))
+			encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
 			photos = append(photos, Photo{
-				Origin: "/i/" + base64.StdEncoding.EncodeToString([]byte(itemPath[len(docroot):])),
-				Small:  "/s/" + base64.StdEncoding.EncodeToString([]byte(itemPath[len(docroot):])),
-				Big:    "/b/" + base64.StdEncoding.EncodeToString([]byte(itemPath[len(docroot):])),
+				Origin: "/i/" + encodedPath,
+				Small:  "/s/" + encodedPath,
+				Big:    "/b/" + encodedPath,
 				Title:  info.Name(),
 			})
 		}
@@ -255,8 +265,15 @@ func (c *MainController) GetPage() {
 
 	idx := strings.LastIndexByte(currentPath, os.PathSeparator)
 	if idx >= 0 {
+		encodedPath := base64.StdEncoding.EncodeToString([]byte(currentPath[:idx]))
+		encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
 		links = append(links, Link{
-			Url:   "/p/" + base64.StdEncoding.EncodeToString([]byte(currentPath[:idx])),
+			Url:   "/p/" + encodedPath,
+			Title: "返回上一级目录",
+		})
+	} else {
+		links = append(links, Link{
+			Url:   "/",
 			Title: "返回上一级目录",
 		})
 	}
