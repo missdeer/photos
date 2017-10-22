@@ -123,7 +123,6 @@ func traverse(rootPath string) (photos []Photo, videos []Video, links []Link) {
 // Get return main page
 func (c *MainController) Get() {
 	rootPath := beego.AppConfig.String("docroot")
-	fmt.Println("root directory", rootPath)
 	photos, videos, links := traverse(rootPath)
 	c.Data["Photos"] = photos
 	c.Data["Videos"] = videos
