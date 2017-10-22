@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="/css/blueimp-gallery-indicator.css">
 <link rel="stylesheet" href="/css/blueimp-gallery-video.css">
 <link rel="stylesheet" href="/css/demo/demo.css">
+<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+<script src="http://vjs.zencdn.net/4.12/video.js"></script>
 </head>
 <body>
 <h1>{{.Title}}</h1>
@@ -37,17 +39,17 @@
     {{if not (or .IsMobile .IsTablet)}}
     {{range .Videos}}
     <p>{{.Title}}</p>    
-    <video width="800" controls>
+    <video width="800" height="600" class="video-js vjs-default-skin" controls preload="auto" data-setup="{}">
         <source src="{{.Url}}" type="video/mp4">
-        Your browser does not support HTML5 video.
+        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
     </video>
     {{end}}
     {{else}}
     {{range .Videos}}
     <p>{{.Title}}</p>    
-    <video width="480" controls>
+    <video width="480" height="320" class="video-js vjs-default-skin" controls preload="auto" data-setup="{}">
         <source src="{{.Url}}" type="video/mp4">
-        Your browser does not support HTML5 video.
+        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
     </video>
     {{end}}
     {{end}}
