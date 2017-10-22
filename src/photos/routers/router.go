@@ -16,4 +16,5 @@ func init() {
 	beego.Router("/i/:path", c, "get:GetImage")
 	beego.Router("/s/:path", c, "get:GetSmallImage")
 	beego.Router("/b/:path", c, "get:GetBigImage")
+	beego.Router("/v/:path", c, "get:GetVideo")
 }

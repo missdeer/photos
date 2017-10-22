@@ -48,6 +48,11 @@ type Photo struct {
 	Title  string
 }
 
+type Video struct {
+	Url   string
+	Title string
+}
+
 // Link struct represents a link
 type Link struct {
 	Url   string
@@ -63,7 +68,7 @@ var (
 	sema = NewSemaphore(5)
 )
 
-func traverse(rootPath string) (photos []Photo, links []Link) {
+func traverse(rootPath string) (photos []Photo, videos []Video, links []Link) {
 	walkFunc := func(itemPath string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -93,6 +98,14 @@ func traverse(rootPath string) (photos []Photo, links []Link) {
 				Title:  info.Name(),
 			})
 		}
+		if ext == ".mp4" || ext == ".mov" {
+			encodedPath := base64.StdEncoding.EncodeToString([]byte(info.Name()))
+			encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
+			videos = append(videos, Video{
+				Url:   "/v/" + encodedPath,
+				Title: info.Name(),
+			})
+		}
 		return nil
 	}
 	filepath.Walk(rootPath, walkFunc)
@@ -103,8 +116,9 @@ func traverse(rootPath string) (photos []Photo, links []Link) {
 func (c *MainController) Get() {
 	rootPath := beego.AppConfig.String("docroot")
 	fmt.Println("root directory", rootPath)
-	photos, links := traverse(rootPath)
+	photos, videos, links := traverse(rootPath)
 	c.Data["Photos"] = photos
+	c.Data["Videos"] = videos
 	c.Data["Title"] = "Our Photos"
 	c.Data["Links"] = links
 	c.TplName = "index.tpl"
@@ -235,6 +249,19 @@ func (c *MainController) GetBigImage() {
 	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, bigImgPath)
 }
 
+// GetVideo return video
+func (c *MainController) GetVideo() {
+	path := c.Ctx.Input.Param(":path")
+	path = strings.Replace(path, ":slash:", "/", -1)
+	rawPath, err := base64.StdEncoding.DecodeString(path)
+	if err != nil {
+		return
+	}
+	docroot := beego.AppConfig.String("docroot")
+	videoPath := fmt.Sprintf("%s%c%s", docroot, os.PathSeparator, string(rawPath))
+	http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, videoPath)
+}
+
 // GetPage return a specified page
 func (c *MainController) GetPage() {
 	path := c.Ctx.Input.Param(":path")
@@ -249,6 +276,7 @@ func (c *MainController) GetPage() {
 	rootPath := fmt.Sprintf("%s%c%s", docroot, os.PathSeparator, currentPath)
 
 	var photos []Photo
+	var videos []Video
 	var links []Link
 	walkFunc := func(itemPath string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -280,6 +308,14 @@ func (c *MainController) GetPage() {
 				Title:  info.Name(),
 			})
 		}
+		if ext == ".mp4" || ext == ".mov" {
+			encodedPath := base64.StdEncoding.EncodeToString([]byte(itemPath[len(docroot):]))
+			encodedPath = strings.Replace(encodedPath, "/", ":slash:", -1)
+			videos = append(videos, Video{
+				Url:   "/v/" + encodedPath,
+				Title: info.Name(),
+			})
+		}
 		return nil
 	}
 
@@ -308,6 +344,7 @@ func (c *MainController) GetPage() {
 	}
 
 	c.Data["Photos"] = photos
+	c.Data["Videos"] = videos
 	c.Data["Title"] = currentPath
 	c.Data["Links"] = links
 	c.TplName = "index.tpl"

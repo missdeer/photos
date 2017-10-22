@@ -33,6 +33,15 @@
     <a class="play-pause"></a>
     <ol class="indicator"></ol>
 </div>
+<div id="videos" class="videos">
+    {{range .Videos}}
+    <p>{{.Title}}</p>
+    <video width="480">
+        <source src="{{.Url}}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    {{end}}
+</div>
 <ul class="navigation">
     {{range .Links}}
 	<li><a href="{{.Url}}">{{.Title}}</a></li>
