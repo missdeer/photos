@@ -17,6 +17,7 @@ import (
 	"image/png"
 	_ "image/png"
 
+	"github.com/Shaked/gomobiledetect"
 	"github.com/astaxie/beego"
 	"github.com/nfnt/resize"
 )
@@ -67,6 +68,13 @@ type MainController struct {
 var (
 	sema = NewSemaphore(5)
 )
+
+// Prepare beego always call this method before router handler
+func (c *MainController) Prepare() {
+	detect := mobiledetect.NewMobileDetect(c.Ctx.Request, nil)
+	c.Data["IsMobile"] = detect.IsMobile()
+	c.Data["IsTablet"] = detect.IsTablet()
+}
 
 func traverse(rootPath string) (photos []Photo, videos []Video, links []Link) {
 	walkFunc := func(itemPath string, info os.FileInfo, err error) error {

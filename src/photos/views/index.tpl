@@ -34,12 +34,22 @@
     <ol class="indicator"></ol>
 </div>
 <div id="videos" class="videos">
+    {{if not (or .IsMobile .IsTablet)}}
     {{range .Videos}}
-    <p>{{.Title}}</p>
-    <video width="480">
+    <p>{{.Title}}</p>    
+    <video width="800" controls>
         <source src="{{.Url}}" type="video/mp4">
         Your browser does not support HTML5 video.
     </video>
+    {{end}}
+    {{else}}
+    {{range .Videos}}
+    <p>{{.Title}}</p>    
+    <video width="480" controls>
+        <source src="{{.Url}}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    {{end}}
     {{end}}
 </div>
 <ul class="navigation">
