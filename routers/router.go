@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"photos/controllers"
+	"github.com/missdeer/photos/controllers"
 
 	"github.com/astaxie/beego"
 )

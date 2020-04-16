@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	_ "photos/routers"
+	_ "github.com/missdeer/photos/routers"
 
 	"github.com/astaxie/beego"
 )
