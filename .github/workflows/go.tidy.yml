@@ -21,6 +21,8 @@ jobs:
         run: |
           rm -f go.sum
           go mod tidy
+          cd tools/movephotos
+          go mod tidy
       -
         name: Set up Git
         env:
