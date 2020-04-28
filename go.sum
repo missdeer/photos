@@ -29,8 +29,6 @@ github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/mattn/go-sqlite3 v1.10.0/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
-github.com/missdeer/golib v1.0.0 h1:Lf0SfSwZzoadmyu7F4G5nU+TramDjiA/zrE/wY5oOrY=
-github.com/missdeer/golib v1.0.0/go.mod h1:Cys1ITPPZxIk2eTcQcKT3jDsBdhICAfrrw+ki/eRXxA=
 github.com/missdeer/golib v1.0.1 h1:sqrwtidW5iK6UB6CEVwae+hKpU03huxQIoh89coo81M=
 github.com/missdeer/golib v1.0.1/go.mod h1:Cys1ITPPZxIk2eTcQcKT3jDsBdhICAfrrw+ki/eRXxA=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
