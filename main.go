@@ -4,7 +4,7 @@ import (
 	"os"
 	_ "github.com/missdeer/photos/routers"
 
-	"github.com/astaxie/beego"
+	"github.com/beego/beego"
 )
 
 const (

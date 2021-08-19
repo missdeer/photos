@@ -18,7 +18,7 @@ import (
 	_ "image/png"
 
 	"github.com/Shaked/gomobiledetect"
-	"github.com/astaxie/beego"
+	"github.com/beego/beego"
 	"github.com/nfnt/resize"
 )
 

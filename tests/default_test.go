@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	_ "github.com/missdeer/photos/routers"
 
-	"github.com/astaxie/beego"
+	"github.com/beego/beego"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
